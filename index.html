@@ -59,7 +59,20 @@
         }
 
         /* --- MAIN PAGE STYLES --- */
-        .main-page-content { display: none; }
+        .main-page-content { display: none; position: relative; }
+        .logout-btn {
+            position: absolute;
+            top: 0;
+            right: 0;
+            padding: 8px 18px;
+            font-size: 15px;
+            background-color: #e6e6e6;
+            border: 1px solid #999;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+        .logout-btn:hover { background-color: #d4d4d4; }
 
         .header-container {
             display: flex;
@@ -136,6 +149,7 @@
 
     <!-- MAIN PAGE CONTENT (Hidden until logged in) -->
     <div id="main-page" class="main-page-content">
+        <button class="logout-btn" onclick="logout()">Log out</button>
 
         <div class="header-container">
             <!-- Ensure your logo is named logo.png on GitHub -->
@@ -230,7 +244,7 @@ async function checkPassword() {
 
     if (h === HASH_HEX) {
         err.style.display = "none";
-        sessionStorage.setItem("authHash", h);   // remembers login for this tab only
+        localStorage.setItem("authHash", h);   // stays logged in until "Log out"
         showPortal();
         return;
     }
@@ -253,10 +267,34 @@ function handleKeyPress(event) {
     if (event.key === "Enter") checkPassword();
 }
 
-window.onload = function () {
-    // login is remembered only if the stored value is the correct hash (a plain "true" flag no longer works)
-    if (sessionStorage.getItem("authHash") === HASH_HEX) showPortal();
-};
+// Login is remembered on this browser until the user presses "Log out".
+function applyLoginState() {
+    if (localStorage.getItem("authHash") === HASH_HEX) {
+        showPortal();
+    } else {
+        showLogin();
+    }
+}
+
+function showLogin() {
+    document.getElementById("main-page").style.display = "none";
+    document.getElementById("login-screen").style.display = "flex";
+    document.getElementById("password-input").value = "";
+    document.getElementById("error-msg").style.display = "none";
+    document.getElementById("login-btn").disabled = false;
+}
+
+function logout() {
+    localStorage.removeItem("authHash");
+    sessionStorage.removeItem("authHash");
+    showLogin();
+}
+
+window.onload = applyLoginState;
+
+// Keep the page in step when it is restored with Back/Forward, or when the user logs out in another tab
+window.addEventListener("pageshow", function (e) { if (e.persisted) applyLoginState(); });
+window.addEventListener("storage", function (e) { if (e.key === "authHash") applyLoginState(); });
 </script>
 
 </body>
