@@ -4,6 +4,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Anglo Urdu High School & Jr. College</title>
+    
+    <!-- Scripts for Secure SHA-256 Password Hashing -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js"></script>
+    
     <style>
         /* General Page Styling */
         body {
@@ -14,7 +18,58 @@
             color: #000;
         }
 
-        /* Header Section Styling */
+        /* --- PASSWORD SCREEN STYLES --- */
+        #login-screen {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 80vh;
+            flex-direction: column;
+        }
+        .login-box {
+            border: 1px solid #ccc;
+            padding: 40px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            text-align: center;
+            background-color: #f9f9f9;
+        }
+        .login-box h2 {
+            margin-top: 0;
+            color: #333;
+        }
+        .login-box input {
+            padding: 10px;
+            font-size: 16px;
+            width: 200px;
+            margin-bottom: 15px;
+            border: 1px solid #999;
+            border-radius: 4px;
+        }
+        .login-box button {
+            padding: 10px 20px;
+            font-size: 16px;
+            background-color: #e6e6e6;
+            border: 1px solid #999;
+            cursor: pointer;
+            border-radius: 4px;
+            transition: 0.3s;
+        }
+        .login-box button:hover {
+            background-color: #d4d4d4;
+        }
+        #error-msg {
+            color: red;
+            font-size: 14px;
+            margin-top: 10px;
+            display: none;
+        }
+
+        /* --- MAIN PAGE STYLES --- */
+        .main-page-content {
+            display: none; /* Hidden by default until password is entered */
+        }
+
         .header-container {
             display: flex;
             align-items: center;
@@ -48,14 +103,12 @@
             font-weight: 500;
         }
 
-        /* Divider Line */
         hr {
             border: 0;
             border-top: 1px solid #999;
             margin: 20px 0;
         }
 
-        /* Main Layout (Two Columns) */
         .main-content {
             display: flex;
             justify-content: center;
@@ -71,14 +124,12 @@
             padding: 0 20px;
         }
 
-        /* Vertical Divider between columns */
         .divider {
             width: 1px;
             background-color: #555;
             margin: 0 20px;
         }
 
-        /* Section Titles */
         .section-title {
             background-color: #e6e6e6;
             border: 1px solid #999;
@@ -90,7 +141,6 @@
             box-sizing: border-box;
         }
 
-        /* Button Styling with Decent Effect */
         .btn {
             display: block;
             width: 200px;
@@ -102,24 +152,22 @@
             background-color: #e6e6e6;
             border: 1px solid #999;
             font-size: 16px;
-            transition: all 0.3s ease; /* Smooth transition for hover effect */
+            transition: all 0.3s ease;
             box-sizing: border-box;
         }
 
-        /* Hover Effect for Buttons */
         .btn:hover {
             background-color: #d4d4d4;
             border-color: #333;
             box-shadow: 2px 2px 5px rgba(0,0,0,0.2);
-            transform: translateY(-2px); /* Slight lift effect */
+            transform: translateY(-2px);
         }
 
         .btn:active {
-            transform: translateY(0); /* Pressed effect */
+            transform: translateY(0);
             box-shadow: none;
         }
 
-        /* Responsive Design for Mobile */
         @media (max-width: 768px) {
             .header-container {
                 flex-direction: column;
@@ -141,50 +189,107 @@
 </head>
 <body>
 
-    <!-- Header Section -->
-    <div class="header-container">
-        <!-- Replace 'logo.png' with your actual logo file path -->
-        <img src="logo.png" alt="School Logo" class="logo" onerror="this.style.display='none'">
-        <div class="header-text">
-            <h3>Dr. Zakir Husain Education Society Trust's</h3>
-            <h1>Anglo Urdu High School &amp; Jr. College of Arts</h1>
-            <p>Nashik Road, Tal : Nashik, Dist : Nashik, State : Maharashtra</p>
-            <p>Phone No. : 0253 2465615 Mail ID : anglourdunashik@gmail.com</p>
-            <p>Mobile No : 9022112721, 7020288612</p>
+    <!-- ========================================== -->
+    <!-- LOGIN SCREEN (Shown First)                 -->
+    <!-- ========================================== -->
+    <div id="login-screen">
+        <div class="login-box">
+            <h2>Secure Access</h2>
+            <p>Please enter the password to access the portal.</p>
+            <input type="password" id="password-input" placeholder="Enter Password" onkeypress="handleKeyPress(event)">
+            <br>
+            <button onclick="checkPassword()">Login</button>
+            <div id="error-msg">Incorrect Password. Try again.</div>
         </div>
     </div>
 
-    <hr>
-
-    <!-- Two Column Layout -->
-    <div class="main-content">
+    <!-- ========================================== -->
+    <!-- MAIN PAGE CONTENT (Hidden until logged in) -->
+    <!-- ========================================== -->
+    <div id="main-page" class="main-page-content">
         
-        <!-- Left Column: High School -->
-        <div class="column">
-            <div class="section-title">Anglo Urdu High School</div>
-            
-            <!-- REPLACE THE '#' WITH YOUR ACTUAL LINKS -->
-            <a href="#" class="btn" target="_blank">Data Entry</a>
-            <a href="#" class="btn" target="_blank">Student Search</a>
-            <a href="https://script.google.com/macros/s/AKfycbwOKCVCVwZL9Thp9iQgzIBauDdgFBdJxlJFi0P9eYhVD1QMntW5H_TUB7bxNCT1hyaBqw/exec?page=index" class="btn" target="_blank">Index Page</a>
-            <a href="https://script.google.com/macros/s/AKfycbwOKCVCVwZL9Thp9iQgzIBauDdgFBdJxlJFi0P9eYhVD1QMntW5H_TUB7bxNCT1hyaBqw/exec" class="btn" target="_blank">LC Print</a>
+        <div class="header-container">
+            <!-- Ensure your logo is named logo.png on GitHub -->
+            <img src="logo.png" alt="School Logo" class="logo" onerror="this.style.display='none'">
+            <div class="header-text">
+                <h3>Dr. Zakir Husain Education Society Trust's</h3>
+                <h1>Anglo Urdu High School &amp; Jr. College of Arts</h1>
+                <p>Nashik Road, Tal : Nashik, Dist : Nashik, State : Maharashtra</p>
+                <p>Phone No. : 0253 2465615 Mail ID : anglourdunashik@gmail.com</p>
+                <p>Mobile No : 9022112721, 7020288612</p>
+            </div>
         </div>
 
-        <!-- Vertical Line -->
-        <div class="divider"></div>
+        <hr>
 
-        <!-- Right Column: Junior College -->
-        <div class="column">
-            <div class="section-title">Anglo Urdu Junior College</div>
-            
-            <!-- REPLACE THE '#' WITH YOUR ACTUAL LINKS -->
-            <a href="#" class="btn" target="_blank">Data Entry</a>
-            <a href="#" class="btn" target="_blank">Student Search</a>
-            <a href="#" class="btn" target="_blank">Index Page</a>
-            <a href="#" class="btn" target="_blank">LC Print</a>
+        <div class="main-content">
+            <!-- Left Column: High School -->
+            <div class="column">
+                <div class="section-title">Anglo Urdu High School</div>
+                
+                <!-- REPLACE '#' WITH YOUR HIGH SCHOOL LINKS -->
+                <a href="#" class="btn" target="_blank">Data Entry</a>
+                <a href="#" class="btn" target="_blank">Student Search</a>
+                <a href="#" class="btn" target="_blank">Index Page</a>
+                <a href="#" class="btn" target="_blank">LC Print</a>
+            </div>
+
+            <div class="divider"></div>
+
+            <!-- Right Column: Junior College -->
+            <div class="column">
+                <div class="section-title">Anglo Urdu Junior College</div>
+                
+                <!-- REPLACE '#' WITH YOUR JUNIOR COLLEGE LINKS -->
+                <a href="#" class="btn" target="_blank">Data Entry</a>
+                <a href="#" class="btn" target="_blank">Student Search</a>
+                <a href="#" class="btn" target="_blank">Index Page</a>
+                <a href="#" class="btn" target="_blank">LC Print</a>
+            </div>
         </div>
 
     </div>
+
+    <!-- ========================================== -->
+    <!-- JAVASCRIPT FOR PASSWORD PROTECTION         -->
+    <!-- ========================================== -->
+    <script>
+        // Instead, we store its SHA-256 Hash. It is impossible for someone to read the password from the source code.
+        const SECRET_HASH = "5d10426444cf4bd4cc6d2694943d34c3941bc66002c9147006e8d0d4243c6037"; 
+
+        function checkPassword() {
+            const input = document.getElementById("password-input").value;
+            
+            // Hash the password entered by the user
+            const hash = CryptoJS.SHA256(input).toString();
+            
+            if (hash === SECRET_HASH) {
+                // Correct password: Hide login, show page, save to browser session
+                document.getElementById("login-screen").style.display = "none";
+                document.getElementById("main-page").style.display = "block";
+                sessionStorage.setItem("isLoggedIn", "true");
+            } else {
+                // Incorrect password: Show error
+                document.getElementById("error-msg").style.display = "block";
+                document.getElementById("password-input").value = ""; // Clear input
+            }
+        }
+
+        // Allow pressing "Enter" to submit
+        function handleKeyPress(event) {
+            if (event.key === "Enter") {
+                checkPassword();
+            }
+        }
+
+        // Check if user already logged in during this session (prevents asking for password on page refresh)
+        window.onload = function() {
+            if (sessionStorage.getItem("isLoggedIn") === "true") {
+                document.getElementById("login-screen").style.display = "none";
+                document.getElementById("main-page").style.display = "block";
+            }
+        };
+    </script>
 
 </body>
 </html>
