@@ -51,6 +51,8 @@
         }
         .login-box button:hover { background-color: #d4d4d4; }
         .login-box button:disabled { opacity: 0.6; cursor: not-allowed; }
+        .btn-row { display: flex; justify-content: center; gap: 10px; }
+        .login-box button[type=button] { background-color: #f3f3f3; }
         #error-msg {
             color: red;
             font-size: 14px;
@@ -140,9 +142,16 @@
         <div class="login-box">
             <h2>Secure Access</h2>
             <p>Please enter the password to access the portal.</p>
-            <input type="password" id="password-input" placeholder="Enter Password" autocomplete="off" onkeypress="handleKeyPress(event)">
-            <br>
-            <button id="login-btn" onclick="checkPassword()">Login</button>
+            <form id="login-form" onsubmit="checkPassword(); return false;">
+                <!-- hidden username lets the browser save / fill the password -->
+                <input type="text" name="username" value="portal" autocomplete="username" tabindex="-1" aria-hidden="true" style="position:absolute;left:-9999px;opacity:0;height:0;width:0">>
+                <input type="password" id="password-input" name="password" placeholder="Enter Password" autocomplete="current-password">
+                <br>
+                <div class="btn-row">
+                    <button type="submit" id="login-btn">Log in</button>
+                    <button type="button" id="logout-btn-login" onclick="logout()">Log out</button>
+                </div>
+            </form>
             <div id="error-msg">Incorrect Password. Try again.</div>
         </div>
     </div>
@@ -171,7 +180,7 @@
                 <div class="section-title">Anglo Urdu High School</div>
 
                 <!-- REPLACE '#' WITH YOUR HIGH SCHOOL LINKS -->
-                <a href="#" class="btn" target="_blank">Data Entry</a>
+                <a href="https://docs.google.com/spreadsheets/d/1tk9LTMW15-FzL1RGKwfsROg9NF1wj9MgVkIhwjFmurQ/edit?usp=sharing" class="btn" target="_blank">Data Entry</a>
                 <a href="#" class="btn" target="_blank">Student Search</a>
                 <a href="#" class="btn" target="_blank">Index Page</a>
                 <a href="#" class="btn" target="_blank">LC Print</a>
@@ -184,7 +193,7 @@
                 <div class="section-title">Anglo Urdu Junior College</div>
 
                 <!-- REPLACE '#' WITH YOUR JUNIOR COLLEGE LINKS -->
-                <a href="#" class="btn" target="_blank">Data Entry</a>
+                <a href="https://docs.google.com/spreadsheets/d/1oQwOds9gCHKyDglJDZ_p5EByhQyjXq7k1g12nqJiaU4/edit?usp=sharing" class="btn" target="_blank">Data Entry</a>
                 <a href="#" class="btn" target="_blank">Student Search</a>
                 <a href="https://script.google.com/macros/s/AKfycbwOKCVCVwZL9Thp9iQgzIBauDdgFBdJxlJFi0P9eYhVD1QMntW5H_TUB7bxNCT1hyaBqw/exec?page=index" class="btn" target="_blank">Index Page</a>
                 <a href="https://script.google.com/macros/s/AKfycbwOKCVCVwZL9Thp9iQgzIBauDdgFBdJxlJFi0P9eYhVD1QMntW5H_TUB7bxNCT1hyaBqw/exec" class="btn" target="_blank">LC Print</a>
@@ -244,7 +253,6 @@ async function checkPassword() {
 
     if (h === HASH_HEX) {
         err.style.display = "none";
-        localStorage.setItem("authHash", h);   // stays logged in until "Log out"
         showPortal();
         return;
     }
@@ -263,38 +271,27 @@ async function checkPassword() {
     }
 }
 
-function handleKeyPress(event) {
-    if (event.key === "Enter") checkPassword();
-}
 
-// Login is remembered on this browser until the user presses "Log out".
-function applyLoginState() {
-    if (localStorage.getItem("authHash") === HASH_HEX) {
-        showPortal();
-    } else {
-        showLogin();
-    }
-}
+// The portal never opens by itself: every time the page is opened, the user must click "Log in".
+// (A password saved by the browser can fill the box, but it is not submitted automatically.)
+localStorage.removeItem("authHash");     // clears any auto-login saved by the older version
+sessionStorage.removeItem("authHash");
 
 function showLogin() {
     document.getElementById("main-page").style.display = "none";
     document.getElementById("login-screen").style.display = "flex";
-    document.getElementById("password-input").value = "";
     document.getElementById("error-msg").style.display = "none";
-    document.getElementById("login-btn").disabled = false;
+    document.getElementById("login-btn").disabled = failCount >= 5;   // stays locked during the 30 s wait
 }
 
+// Log out: close the portal and clear the typed password
 function logout() {
-    localStorage.removeItem("authHash");
-    sessionStorage.removeItem("authHash");
+    document.getElementById("password-input").value = "";
     showLogin();
 }
 
-window.onload = applyLoginState;
-
-// Keep the page in step when it is restored with Back/Forward, or when the user logs out in another tab
-window.addEventListener("pageshow", function (e) { if (e.persisted) applyLoginState(); });
-window.addEventListener("storage", function (e) { if (e.key === "authHash") applyLoginState(); });
+// Back/Forward button must not bring the portal back without logging in
+window.addEventListener("pageshow", function (e) { if (e.persisted) showLogin(); });
 </script>
 
 </body>
