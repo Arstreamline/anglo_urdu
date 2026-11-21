@@ -5,9 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Anglo Urdu High School & Jr. College</title>
     
-    <!-- Scripts for Secure SHA-256 Password Hashing -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js"></script>
-    
     <style>
         /* General Page Styling */
         body {
@@ -254,23 +251,30 @@
     <!-- JAVASCRIPT FOR PASSWORD PROTECTION         -->
     <!-- ========================================== -->
     <script>
-        // Instead, we store its SHA-256 Hash. It is impossible for someone to read the password from the source code.
-        const SECRET_HASH = "d5c1d39be86f2a4a222e235b9e3478d29e178a931a0c1b3d2f17a10e84368240";
-        function checkPassword() {
+        // This is the mathematically perfect SHA-256 hash for Au@777
+        const SECRET_HASH = "645585285a7b15396778e88476dbef62f3c4f15880ec53b1970cf536dd202b72";
+
+        // Use the browser's native, secure crypto engine
+        async function checkPassword() {
             const input = document.getElementById("password-input").value;
             
-            // Hash the password entered by the user
-            const hash = CryptoJS.SHA256(input).toString();
+            // Convert the input to a hash using the browser's built-in security
+            const msgBuffer = new TextEncoder().encode(input);
+            const hashBuffer = await crypto.subtle.digest('SHA-256', msgBuffer);
             
-            if (hash === SECRET_HASH) {
-                // Correct password: Hide login, show page, save to browser session
+            // Convert hash to a readable hex string
+            const hashArray = Array.from(new Uint8Array(hashBuffer));
+            const hashHex = hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+            
+            if (hashHex === SECRET_HASH) {
+                // Correct password
                 document.getElementById("login-screen").style.display = "none";
                 document.getElementById("main-page").style.display = "block";
                 sessionStorage.setItem("isLoggedIn", "true");
             } else {
-                // Incorrect password: Show error
+                // Incorrect password
                 document.getElementById("error-msg").style.display = "block";
-                document.getElementById("password-input").value = ""; // Clear input
+                document.getElementById("password-input").value = ""; 
             }
         }
 
@@ -281,7 +285,7 @@
             }
         }
 
-        // Check if user already logged in during this session (prevents asking for password on page refresh)
+        // Check if user already logged in during this session
         window.onload = function() {
             if (sessionStorage.getItem("isLoggedIn") === "true") {
                 document.getElementById("login-screen").style.display = "none";
