@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Anglo Urdu High School & Jr. College</title>
-    
+
     <style>
         /* General Page Styling */
         body {
@@ -31,10 +31,7 @@
             text-align: center;
             background-color: #f9f9f9;
         }
-        .login-box h2 {
-            margin-top: 0;
-            color: #333;
-        }
+        .login-box h2 { margin-top: 0; color: #333; }
         .login-box input {
             padding: 10px;
             font-size: 16px;
@@ -52,9 +49,8 @@
             border-radius: 4px;
             transition: 0.3s;
         }
-        .login-box button:hover {
-            background-color: #d4d4d4;
-        }
+        .login-box button:hover { background-color: #d4d4d4; }
+        .login-box button:disabled { opacity: 0.6; cursor: not-allowed; }
         #error-msg {
             color: red;
             font-size: 14px;
@@ -63,9 +59,7 @@
         }
 
         /* --- MAIN PAGE STYLES --- */
-        .main-page-content {
-            display: none; /* Hidden by default until password is entered */
-        }
+        .main-page-content { display: none; }
 
         .header-container {
             display: flex;
@@ -74,58 +68,16 @@
             text-align: center;
             margin-bottom: 20px;
         }
+        .logo { width: 100px; height: auto; margin-right: 20px; }
+        .header-text h3 { margin: 0; font-size: 16px; font-weight: normal; }
+        .header-text h1 { margin: 5px 0; font-size: 24px; font-weight: bold; text-transform: uppercase; }
+        .header-text p { margin: 3px 0; font-size: 15px; font-weight: 500; }
 
-        .logo {
-            width: 100px;
-            height: auto;
-            margin-right: 20px;
-        }
+        hr { border: 0; border-top: 1px solid #999; margin: 20px 0; }
 
-        .header-text h3 {
-            margin: 0;
-            font-size: 16px;
-            font-weight: normal;
-        }
-
-        .header-text h1 {
-            margin: 5px 0;
-            font-size: 24px;
-            font-weight: bold;
-            text-transform: uppercase;
-        }
-
-        .header-text p {
-            margin: 3px 0;
-            font-size: 15px;
-            font-weight: 500;
-        }
-
-        hr {
-            border: 0;
-            border-top: 1px solid #999;
-            margin: 20px 0;
-        }
-
-        .main-content {
-            display: flex;
-            justify-content: center;
-            max-width: 900px;
-            margin: 0 auto;
-        }
-
-        .column {
-            flex: 1;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            padding: 0 20px;
-        }
-
-        .divider {
-            width: 1px;
-            background-color: #555;
-            margin: 0 20px;
-        }
+        .main-content { display: flex; justify-content: center; max-width: 900px; margin: 0 auto; }
+        .column { flex: 1; display: flex; flex-direction: column; align-items: center; padding: 0 20px; }
+        .divider { width: 1px; background-color: #555; margin: 0 20px; }
 
         .section-title {
             background-color: #e6e6e6;
@@ -152,59 +104,39 @@
             transition: all 0.3s ease;
             box-sizing: border-box;
         }
-
         .btn:hover {
             background-color: #d4d4d4;
             border-color: #333;
             box-shadow: 2px 2px 5px rgba(0,0,0,0.2);
             transform: translateY(-2px);
         }
-
-        .btn:active {
-            transform: translateY(0);
-            box-shadow: none;
-        }
+        .btn:active { transform: translateY(0); box-shadow: none; }
 
         @media (max-width: 768px) {
-            .header-container {
-                flex-direction: column;
-            }
-            .logo {
-                margin-right: 0;
-                margin-bottom: 15px;
-            }
-            .main-content {
-                flex-direction: column;
-            }
-            .divider {
-                width: 100%;
-                height: 1px;
-                margin: 30px 0;
-            }
+            .header-container { flex-direction: column; }
+            .logo { margin-right: 0; margin-bottom: 15px; }
+            .main-content { flex-direction: column; }
+            .divider { width: 100%; height: 1px; margin: 30px 0; }
         }
     </style>
 </head>
 <body>
 
-    <!-- ========================================== -->
-    <!-- LOGIN SCREEN (Shown First)                 -->
-    <!-- ========================================== -->
+    <!-- LOGIN SCREEN (Shown First) -->
     <div id="login-screen">
         <div class="login-box">
             <h2>Secure Access</h2>
             <p>Please enter the password to access the portal.</p>
-            <input type="password" id="password-input" placeholder="Enter Password" onkeypress="handleKeyPress(event)">
+            <input type="password" id="password-input" placeholder="Enter Password" autocomplete="off" onkeypress="handleKeyPress(event)">
             <br>
-            <button onclick="checkPassword()">Login</button>
+            <button id="login-btn" onclick="checkPassword()">Login</button>
             <div id="error-msg">Incorrect Password. Try again.</div>
         </div>
     </div>
 
-    <!-- ========================================== -->
     <!-- MAIN PAGE CONTENT (Hidden until logged in) -->
-    <!-- ========================================== -->
     <div id="main-page" class="main-page-content">
-        
+
         <div class="header-container">
             <!-- Ensure your logo is named logo.png on GitHub -->
             <img src="logo.png" alt="School Logo" class="logo" onerror="this.style.display='none'">
@@ -223,7 +155,7 @@
             <!-- Left Column: High School -->
             <div class="column">
                 <div class="section-title">Anglo Urdu High School</div>
-                
+
                 <!-- REPLACE '#' WITH YOUR HIGH SCHOOL LINKS -->
                 <a href="#" class="btn" target="_blank">Data Entry</a>
                 <a href="#" class="btn" target="_blank">Student Search</a>
@@ -236,7 +168,7 @@
             <!-- Right Column: Junior College -->
             <div class="column">
                 <div class="section-title">Anglo Urdu Junior College</div>
-                
+
                 <!-- REPLACE '#' WITH YOUR JUNIOR COLLEGE LINKS -->
                 <a href="#" class="btn" target="_blank">Data Entry</a>
                 <a href="#" class="btn" target="_blank">Student Search</a>
@@ -247,35 +179,85 @@
 
     </div>
 
-   <script>
-    function checkPassword() {
-        const input = document.getElementById("password-input").value;
-        
-        // Simple text check
-        if (input === "Au@777") {
-            document.getElementById("login-screen").style.display = "none";
-            document.getElementById("main-page").style.display = "block";
-            sessionStorage.setItem("isLoggedIn", "true");
-        } else {
-            document.getElementById("error-msg").style.display = "block";
-            document.getElementById("password-input").value = "";
-        }
+<script>
+// ---- Password is NOT stored in this file. Only a salted PBKDF2-SHA256 hash is. ----
+var SALT_HEX = "e9b15df83f395ed3b389be99c9a7996b";
+var HASH_HEX = "e0010cd54c1ef52f2c52df4a99b0f372062e92794a0b8d679a627d6f558c0775";
+var ITERATIONS = 200000;
+
+var failCount = 0;
+
+function hexToBytes(hex) {
+    var out = new Uint8Array(hex.length / 2);
+    for (var i = 0; i < out.length; i++) out[i] = parseInt(hex.substr(i * 2, 2), 16);
+    return out;
+}
+function bytesToHex(buf) {
+    return Array.prototype.map.call(new Uint8Array(buf), function (b) {
+        return ('0' + b.toString(16)).slice(-2);
+    }).join('');
+}
+
+// Returns the hex hash of the given password
+async function hashPassword(pw) {
+    var keyMaterial = await crypto.subtle.importKey(
+        "raw", new TextEncoder().encode(pw), "PBKDF2", false, ["deriveBits"]);
+    var bits = await crypto.subtle.deriveBits(
+        { name: "PBKDF2", salt: hexToBytes(SALT_HEX), iterations: ITERATIONS, hash: "SHA-256" },
+        keyMaterial, 256);
+    return bytesToHex(bits);
+}
+
+function showPortal() {
+    document.getElementById("login-screen").style.display = "none";
+    document.getElementById("main-page").style.display = "block";
+}
+
+async function checkPassword() {
+    var btn = document.getElementById("login-btn");
+    var err = document.getElementById("error-msg");
+    var input = document.getElementById("password-input").value;
+
+    if (!window.crypto || !crypto.subtle) {
+        err.textContent = "This browser cannot verify the password. Open the page over https.";
+        err.style.display = "block";
+        return;
+    }
+    if (!input) return;
+
+    btn.disabled = true;
+    var h = await hashPassword(input);
+
+    if (h === HASH_HEX) {
+        err.style.display = "none";
+        sessionStorage.setItem("authHash", h);   // remembers login for this tab only
+        showPortal();
+        return;
     }
 
-    function handleKeyPress(event) {
-        if (event.key === "Enter") {
-            checkPassword();
-        }
-    }
+    failCount++;
+    err.textContent = "Incorrect Password. Try again.";
+    err.style.display = "block";
+    document.getElementById("password-input").value = "";
 
-    window.onload = function() {
-        if (sessionStorage.getItem("isLoggedIn") === "true") {
-            document.getElementById("login-screen").style.display = "none";
-            document.getElementById("main-page").style.display = "block";
-        }
-    };
+    // after 5 wrong attempts, wait 30 seconds
+    if (failCount >= 5) {
+        err.textContent = "Too many attempts. Wait 30 seconds.";
+        setTimeout(function () { failCount = 0; btn.disabled = false; err.style.display = "none"; }, 30000);
+    } else {
+        btn.disabled = false;
+    }
+}
+
+function handleKeyPress(event) {
+    if (event.key === "Enter") checkPassword();
+}
+
+window.onload = function () {
+    // login is remembered only if the stored value is the correct hash (a plain "true" flag no longer works)
+    if (sessionStorage.getItem("authHash") === HASH_HEX) showPortal();
+};
 </script>
-    
 
 </body>
 </html>
